@@ -43,7 +43,7 @@
     "mode": "local",
     "auth": {
       "mode": "token",
-      "token": "REDACTED_ROTATED_TOKEN"
+      "token": "${OPENCLAW_GATEWAY_TOKEN}"
     }
   }
 }
