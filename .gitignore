@@ -27,3 +27,6 @@ credentials/
 *.bak*
 logs/
 update-check.json
+workspace/USER.md
+workspace/IDENTITY.md
+workspace/memory/
