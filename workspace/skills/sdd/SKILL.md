@@ -29,12 +29,22 @@ ls workspace/SDD/ | sort | tail -1
 
 ## Document Template
 
+Fetch the canonical versioned template from PromptRoot before starting a new SDD:
+
+```bash
+bash workspace/skills/promptroot/scripts/fetch-prompt.sh promptroot/promptroot main tutorial/templates/versioned-modular-sdd-plan
+```
+
+Fill in the `{PLACEHOLDER}` variables interactively with Jesse. The PromptRoot template includes conditional sections (unit tests, E2E tests, UI changes, etc.) — ask Jesse which to include.
+
+If the fetch fails (network/rate limit), fall back to the inline template below:
+
 ```markdown
 # SDD-NNNN: Title
 
-**Version:** 1.0  
-**Date:** YYYY-MM-DD  
-**Author:** Bliz  
+**Version:** 1.0
+**Date:** YYYY-MM-DD
+**Author:** Bliz
 **Status:** Draft | In Progress | Complete
 
 ## Overview
@@ -54,7 +64,7 @@ Brief description of what this plan covers and why.
 
 ### Phase 1 — Name
 
-**Goal:** What this phase achieves  
+**Goal:** What this phase achieves
 **Tasks:**
 - [ ] Task 1
 - [ ] Task 2
