@@ -1,12 +1,12 @@
 {
+  "meta": {
+    "lastTouchedVersion": "2026.3.13",
+    "lastTouchedAt": "2026-03-20T17:56:41.340Z"
+  },
   "env": {
     "shellEnv": {
       "enabled": true
     }
-  },
-  "meta": {
-    "lastTouchedVersion": "2026.3.13",
-    "lastTouchedAt": "2026-03-17T22:33:09.415Z"
   },
   "agents": {
     "defaults": {
@@ -44,6 +44,17 @@
     "auth": {
       "mode": "token",
       "token": "${OPENCLAW_GATEWAY_TOKEN}"
+    }
+  },
+  "plugins": {
+    "allow": [
+      "promptroot-gateway",
+      "telegram"
+    ],
+    "entries": {
+      "promptroot-gateway": {
+        "enabled": true
+      }
     }
   }
 }
