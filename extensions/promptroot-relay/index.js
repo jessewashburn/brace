@@ -169,7 +169,67 @@ const plugin = {
             completedAt: new Date().toISOString(),
             ...(error ? { error } : {}),
           });
+          return;
         }
+
+        if (msg.type === "openai") {
+          const { requestId, body } = msg;
+          if (!requestId || !body) {
+            logErr(`malformed openai message: missing requestId or body`);
+            return;
+          }
+
+          const gatewayPort = process.env.OPENCLAW_GATEWAY_PORT || 18789;
+          const gatewayToken = process.env.OPENCLAW_GATEWAY_TOKEN;
+          const isStream = body.stream === true;
+
+          log(`openai request ${requestId} stream=${isStream}`);
+
+          let response;
+          try {
+            response = await fetch(`http://localhost:${gatewayPort}/v1/chat/completions`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${gatewayToken}`,
+              },
+              body: JSON.stringify(body),
+            });
+          } catch (err) {
+            logErr(`openai fetch failed for ${requestId}: ${String(err)}`);
+            sendSafe({
+              type: "openai_response",
+              requestId,
+              body: { error: { message: String(err), type: "relay_error" } },
+            });
+            return;
+          }
+
+          if (!response.ok && !isStream) {
+            const errBody = await response.json().catch(() => ({}));
+            sendSafe({ type: "openai_response", requestId, body: errBody });
+            return;
+          }
+
+          if (isStream) {
+            try {
+              for await (const chunk of response.body) {
+                sendSafe({ type: "openai_chunk", requestId, data: chunk.toString() });
+              }
+            } catch (err) {
+              logErr(`openai stream error for ${requestId}: ${String(err)}`);
+            } finally {
+              sendSafe({ type: "openai_done", requestId });
+            }
+          } else {
+            const result = await response.json().catch((err) => ({
+              error: { message: String(err), type: "relay_error" },
+            }));
+            sendSafe({ type: "openai_response", requestId, body: result });
+          }
+          return;
+        }
+
         // Unknown message types (ping, ack, etc.) are silently ignored
       });
 
