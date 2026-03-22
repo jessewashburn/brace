@@ -44,6 +44,9 @@
     "auth": {
       "mode": "token",
       "token": "${OPENCLAW_GATEWAY_TOKEN}"
+    },
+    "openai": {
+      "chatCompletions": true
     }
   },
   "plugins": {

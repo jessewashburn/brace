@@ -40,7 +40,7 @@ function extractLastAssistantText(messages) {
 
 // ─── Plugin ───────────────────────────────────────────────────────────────────
 
-const DEFAULT_RELAY_URL = "wss://relay.promptroot.io/connect";
+const DEFAULT_RELAY_URL = "wss://promptroot-relay.fly.dev/connect";
 const RECONNECT_BASE_MS = 2_000;
 const RECONNECT_MAX_MS = 60_000;
 
@@ -78,6 +78,7 @@ const plugin = {
       try {
         const { runId } = await api.runtime.subagent.run({
           sessionKey,
+          idempotencyKey: jobId,
           message: text,
           deliver: false,
         });
@@ -164,7 +165,7 @@ const plugin = {
           sendSafe({
             type: "result",
             jobId,
-            output,
+            result: output,
             completedAt: new Date().toISOString(),
             ...(error ? { error } : {}),
           });
@@ -175,6 +176,11 @@ const plugin = {
       ws.on("close", (code, reason) => {
         if (stopped) return;
         const reasonStr = reason?.toString() || "no reason";
+        // 4000 = replaced by a newer instance of this plugin — do not reconnect
+        if (code === 4000) {
+          log(`disconnected (${code} ${reasonStr}) — yielding to newer instance`);
+          return;
+        }
         const delay = Math.min(RECONNECT_BASE_MS * 2 ** reconnectAttempt, RECONNECT_MAX_MS);
         reconnectAttempt++;
         log(`disconnected (${code} ${reasonStr}) — reconnecting in ${delay}ms`);

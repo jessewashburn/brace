@@ -1,0 +1,37 @@
+app = "brace-ui"
+primary_region = "iad"
+
+[build]
+  image = "ghcr.io/open-webui/open-webui:main"
+
+[env]
+  PORT = "8080"
+  WEBUI_NAME = "Brace"
+  # Disable features not needed for Brace
+  ENABLE_SIGNUP = "false"
+  ENABLE_IMAGE_GENERATION = "false"
+  ENABLE_COMMUNITY_SHARING = "false"
+  ENABLE_MESSAGE_RATING = "false"
+  DEFAULT_USER_ROLE = "admin"
+  # Point at OpenClaw gateway via Cloudflare Tunnel
+  # OPENAI_API_BASE_URL and OPENAI_API_KEY set via fly secrets (never in this file)
+
+[[mounts]]
+  source = "brace_data"
+  destination = "/app/backend/data"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+
+  [http_service.concurrency]
+    type = "connections"
+    hard_limit = 25
+    soft_limit = 20
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"
