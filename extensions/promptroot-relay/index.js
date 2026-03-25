@@ -214,7 +214,7 @@ const plugin = {
           if (isStream) {
             try {
               for await (const chunk of response.body) {
-                sendSafe({ type: "openai_chunk", requestId, data: chunk.toString() });
+                sendSafe({ type: "openai_chunk", requestId, data: Buffer.from(chunk).toString("utf8") });
               }
             } catch (err) {
               logErr(`openai stream error for ${requestId}: ${String(err)}`);

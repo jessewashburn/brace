@@ -1,16 +1,42 @@
 {
   "meta": {
-    "lastTouchedVersion": "2026.3.13",
-    "lastTouchedAt": "2026-03-20T17:56:41.340Z"
+    "lastTouchedVersion": "2026.3.23-2",
+    "lastTouchedAt": "2026-03-24T23:36:35.532Z"
   },
   "env": {
     "shellEnv": {
       "enabled": true
     }
   },
+  "wizard": {
+    "lastRunAt": "2026-03-23T21:34:04.964Z",
+    "lastRunVersion": "2026.3.13",
+    "lastRunCommand": "onboard",
+    "lastRunMode": "local"
+  },
+  "auth": {
+    "profiles": {
+      "anthropic:openclaw": {
+        "provider": "anthropic",
+        "mode": "token"
+      },
+      "anthropic:manual": {
+        "provider": "anthropic",
+        "mode": "token"
+      }
+    },
+    "order": {
+      "anthropic": [
+        "anthropic:openclaw",
+        "anthropic:manual"
+      ]
+    }
+  },
   "agents": {
     "defaults": {
-      "model": "anthropic/claude-sonnet-4-6",
+      "model": {
+        "primary": "anthropic/claude-sonnet-4-6"
+      },
       "workspace": "/home/jesse/.openclaw/workspace",
       "contextPruning": {
         "mode": "cache-ttl",
@@ -24,11 +50,22 @@
       }
     }
   },
+  "tools": {
+    "profile": "coding",
+    "web": {
+      "search": {
+        "provider": "gemini"
+      }
+    }
+  },
   "commands": {
     "native": "auto",
     "nativeSkills": "auto",
     "restart": true,
     "ownerDisplay": "raw"
+  },
+  "session": {
+    "dmScope": "per-channel-peer"
   },
   "channels": {
     "telegram": {
@@ -40,13 +77,23 @@
     }
   },
   "gateway": {
+    "port": 18789,
     "mode": "local",
+    "bind": "loopback",
     "auth": {
       "mode": "token",
       "token": "${OPENCLAW_GATEWAY_TOKEN}"
     },
-    "openai": {
-      "chatCompletions": true
+    "tailscale": {
+      "mode": "off",
+      "resetOnExit": false
+    },
+    "http": {
+      "endpoints": {
+        "chatCompletions": {
+          "enabled": true
+        }
+      }
     }
   },
   "plugins": {
