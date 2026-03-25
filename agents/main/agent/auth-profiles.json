@@ -9,12 +9,39 @@
         "provider": "default",
         "id": "ANTHROPIC_API_KEY"
       }
+    },
+    "anthropic:openclaw": {
+      "type": "token",
+      "provider": "anthropic",
+      "token": "sk-ant-oat01-R1wU6UDlLySUwAKTDcC6E-hjz5H8vdW-IZ29e_XpEK957QhHZUzLcoYSShxnghKFPvi"
+    },
+    "anthropic:manual": {
+      "type": "token",
+      "provider": "anthropic",
+      "token": "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"
     }
+  },
+  "lastGood": {
+    "anthropic": "anthropic:manual"
   },
   "usageStats": {
     "anthropic:default": {
       "errorCount": 0,
-      "lastUsed": 1773789375617
+      "lastUsed": 1774301808155
+    },
+    "anthropic:openclaw": {
+      "errorCount": 5,
+      "lastUsed": 1774308387188,
+      "failureCounts": {
+        "auth": 5
+      },
+      "lastFailureAt": 1774406623043,
+      "cooldownUntil": 1774406644516
+    },
+    "anthropic:manual": {
+      "errorCount": 0,
+      "lastUsed": 1774406588852,
+      "lastFailureAt": 1774402625030
     }
   }
 }
