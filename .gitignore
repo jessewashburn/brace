@@ -31,3 +31,4 @@ workspace/MEMORY.md
 workspace/memory/
 workspace/.openclaw/
 workspace/BOOTSTRAP.md
+.env
