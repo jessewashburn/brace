@@ -1,0 +1,178 @@
+/*
+ * Brace × PromptRoot Theme for Open WebUI
+ *
+ * Applies PromptRoot's dark design system to the Brace Open WebUI instance.
+ * Design tokens sourced from promptroot/promptroot → src/styles/base.css
+ *
+ * How to apply:
+ *   Option A (Admin Panel): Paste the contents of this file into
+ *     Open WebUI → Admin Panel → Interface → Custom CSS
+ *
+ *   Option B (Docker/fly.io env): Set
+ *     WEBUI_CUSTOM_CSS_FILE=/path/to/theme.css
+ *     and mount this file at that path.
+ *
+ * Open WebUI version target: 0.6.x (Tailwind v4, oklch color scale)
+ * Last verified: 2026-03-27
+ */
+
+/* =====================================================================
+   1. FORCE DARK MODE
+   Open WebUI defaults to system preference. Lock it to dark.
+   ===================================================================== */
+
+html {
+  color-scheme: dark !important;
+}
+
+/* =====================================================================
+   2. GRAY SCALE — Override Open WebUI's oklch gray ramp
+   Maps PromptRoot's navy/dark-blue palette onto OWU's gray scale.
+
+   OWU gray usage (dark mode):
+     950/900/850 = page background, sidebar background
+     800/700     = cards, inputs, elevated surfaces
+     600/500     = borders, dividers
+     400/300     = muted text, placeholders
+     200/100/50  = light text, icons on dark
+   ===================================================================== */
+
+:root,
+.dark,
+[data-theme="dark"] {
+  /* Deep navy backgrounds (PromptRoot: --bg #0a0e1a) */
+  --color-gray-950: #0a0e1a;
+  --color-gray-900: #0d1121;
+  --color-gray-850: #0f1428;
+
+  /* Card / input surfaces (PromptRoot: --surface #141829) */
+  --color-gray-800: #141829;
+  --color-gray-750: #171c2f;
+
+  /* Elevated surfaces / hover (PromptRoot: --surface-elevated #1a1f35) */
+  --color-gray-700: #1a1f35;
+
+  /* Borders (PromptRoot: --border #222438) */
+  --color-gray-600: #222438;
+  --color-gray-500: #2a2d4a;
+
+  /* Muted text (PromptRoot: --text-muted #8b94a8) */
+  --color-gray-400: #8b94a8;
+  --color-gray-300: #a0a8bc;
+
+  /* Primary text (PromptRoot: --text #f0f3f8) */
+  --color-gray-200: #c8cfe0;
+  --color-gray-100: #e0e5f0;
+  --color-gray-50: #f0f3f8;
+}
+
+/* =====================================================================
+   3. ACCENT COLOR — Cyan (PromptRoot: --accent #4dd9ff)
+   Open WebUI uses blue-* utilities for primary actions.
+   Map the blue scale to PromptRoot's cyan.
+   ===================================================================== */
+
+:root,
+.dark,
+[data-theme="dark"] {
+  --color-blue-400: #4dd9ff;
+  --color-blue-500: #33ccf5;
+  --color-blue-600: #1ab8e8;
+  --color-blue-700: #0fa3d1;
+
+  /* Accent glow for focus rings */
+  --color-blue-300: #7ae4ff;
+  --color-blue-200: #a8eeff;
+}
+
+/* =====================================================================
+   4. SCROLLBARS — Match PromptRoot thin scrollbar style
+   ===================================================================== */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #222438 transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #222438;
+  border-radius: 4px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #8b94a8;
+}
+
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* =====================================================================
+   5. TYPOGRAPHY — Use Inter (PromptRoot's font) if available
+   Falls back gracefully to OWU's existing system stack.
+   ===================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+html,
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+}
+
+/* =====================================================================
+   6. SIDEBAR — Navy background, border right
+   ===================================================================== */
+
+#sidebar {
+  background: #0d1121 !important;
+  border-right: 1px solid #222438 !important;
+}
+
+/* =====================================================================
+   7. INPUT AREA — PromptRoot surface color, cyan focus ring
+   ===================================================================== */
+
+#chat-input,
+[id^="chat-input"] {
+  background: #141829 !important;
+  border-color: #222438 !important;
+}
+
+#chat-input:focus-within,
+[id^="chat-input"]:focus-within {
+  border-color: #4dd9ff !important;
+  box-shadow: 0 0 0 2px rgba(77, 217, 255, 0.12) !important;
+}
+
+/* =====================================================================
+   8. PRIMARY BUTTONS — Cyan accent (replaces default blue)
+   ===================================================================== */
+
+button[class*="bg-black"],
+button[class*="bg-gray-900"] {
+  background: #4dd9ff !important;
+  color: #0a0e1a !important;
+}
+
+button[class*="bg-black"]:hover,
+button[class*="bg-gray-900"]:hover {
+  background: #5ad1ff !important;
+}
+
+/* =====================================================================
+   9. SELECTION — Cyan highlight
+   ===================================================================== */
+
+::selection {
+  background: rgba(77, 217, 255, 0.2);
+  color: #f0f3f8;
+}
