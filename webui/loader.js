@@ -28,7 +28,7 @@
     return origSetProperty.call(this, prop, value, priority);
   };
 
-  // Also set them immediately on documentElement in case they're already set
+  // Set CSS variables immediately on documentElement
   const applyColors = () => {
     for (const [prop, val] of Object.entries(BRACE_GRAYS)) {
       document.documentElement.style.setProperty(prop, val);
@@ -49,7 +49,7 @@
       }
     }
     // Also fix document title
-    if (document.title.includes('Open WebUI')) {
+    if (document.title && document.title.includes('Open WebUI')) {
       document.title = document.title.replace(/Open WebUI/g, 'Brace');
     }
   };
@@ -57,7 +57,6 @@
   const applyAll = () => {
     applyColors();
     cleanBranding();
-    // Re-run branding cleanup after a short delay for dynamically rendered text
     setTimeout(cleanBranding, 500);
     setTimeout(cleanBranding, 1500);
   };

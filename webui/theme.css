@@ -1,13 +1,14 @@
 /*
- * Brace × PromptRoot Theme for Open WebUI v5.0
+ * Brace × PromptRoot Theme for Open WebUI v5.1
  * Full PromptRoot design system — navy bg, cyan accent, Inter font
  * Force-dark, direct selectors (Tailwind v4 compatible)
  *
- * v5.0 changes:
- * - Hide suggested prompts on homepage
- * - Fix sidebar contrast (solid dark surface, white text)
- * - Consistent cyan accent on ALL interactive buttons
- * - PromptRoot logo replaces OWUI logo via Dockerfile
+ * v5.1 fixes:
+ * 1e) sidebar history hover: white-on-white → readable
+ * 1f) Folders/Chats buttons: text-only cyan, no filled bg
+ * 1g) model selector: text-only, not cyan filled
+ * favicon: handled via Dockerfile COPY
+ * 1i) submenu hover effects restored
  */
 
 /* =====================================================================
@@ -25,7 +26,7 @@ code, pre, kbd, samp, .font-mono, [class*="font-mono"] {
 }
 
 /* =====================================================================
-   BASE — Force dark navy
+   BASE — Force dark navy on everything
    ===================================================================== */
 
 html, html.light, html.dark {
@@ -39,51 +40,31 @@ body {
 }
 
 /* =====================================================================
-   SIDEBAR — Solid dark surface, strong contrast text
+   BACKGROUNDS — Gray scale → PromptRoot palette
    ===================================================================== */
 
-/* Sidebar container — solid #141829, NOT faded/transparent */
-nav,
-aside,
-[class*="sidebar"],
-.sidebar {
-  background-color: #141829 !important;
-}
-
-/* All gray sidebar backgrounds → solid surface */
 .bg-gray-950, .dark\:bg-gray-950,
-.hover\:bg-gray-950:hover, .dark\:hover\:bg-gray-950:hover,
-.bg-gray-900, .dark\:bg-gray-900,
-.hover\:bg-gray-900:hover, .dark\:hover\:bg-gray-900:hover {
+.bg-gray-900, .dark\:bg-gray-900 {
   background-color: #0d1121 !important;
 }
 
 .bg-gray-850, .dark\:bg-gray-850,
-.hover\:bg-gray-850:hover, .dark\:hover\:bg-gray-850:hover,
-.bg-gray-800, .dark\:bg-gray-800,
-.hover\:bg-gray-800:hover, .dark\:hover\:bg-gray-800:hover {
+.bg-gray-800, .dark\:bg-gray-800 {
   background-color: #141829 !important;
 }
 
-.bg-gray-700, .dark\:bg-gray-700,
-.hover\:bg-gray-700:hover, .dark\:hover\:bg-gray-700:hover {
+.bg-gray-700, .dark\:bg-gray-700 {
   background-color: #1a1f35 !important;
 }
 
-.bg-gray-600, .dark\:bg-gray-600,
-.hover\:bg-gray-600:hover, .dark\:hover\:bg-gray-600:hover {
+.bg-gray-600, .dark\:bg-gray-600 {
   background-color: #222438 !important;
 }
 
-/* Light mode grays → surface */
-.bg-gray-100, .bg-gray-50, .dark\:bg-gray-850 {
+.bg-gray-50, .bg-gray-100 {
   background-color: #141829 !important;
 }
-.hover\:bg-gray-100:hover, .hover\:bg-gray-50:hover {
-  background-color: #1a1f35 !important;
-}
 
-/* White → main bg */
 .bg-white, .dark\:bg-white {
   background-color: #0a0e1a !important;
 }
@@ -96,49 +77,84 @@ aside,
 .dark\:bg-gray-850\/90 { background-color: rgba(20,24,41,0.9) !important; }
 .dark\:bg-gray-700\/20 { background-color: rgba(26,31,53,0.4) !important; }
 .dark\:bg-gray-800\/50 { background-color: rgba(20,24,41,0.5) !important; }
+.dark\:bg-white\/5 { background-color: rgba(255,255,255,0.05) !important; }
 
 /* =====================================================================
-   SIDEBAR HOVER STATES — clearly visible
+   SIDEBAR HOVER STATES — Fix 1e: white-on-white hover
+   Use clearly visible surface-elevated (#1a1f35) for ALL hover/active states
    ===================================================================== */
 
-/* Sidebar nav items hover */
+/* Hover states on gray backgrounds */
+.hover\:bg-gray-100:hover,
+.hover\:bg-gray-50:hover,
+.hover\:bg-gray-900:hover,
+.hover\:bg-gray-950:hover,
+.hover\:bg-gray-800:hover,
+.hover\:bg-gray-850:hover,
+.hover\:bg-gray-700:hover,
 .dark\:hover\:bg-gray-850:hover,
 .dark\:hover\:bg-gray-900:hover,
 .dark\:hover\:bg-gray-950:hover,
-.dark\:hover\:bg-white\/5:hover {
+.dark\:hover\:bg-gray-800:hover,
+.dark\:hover\:bg-gray-700:hover,
+.dark\:hover\:bg-white\/5:hover,
+.dark\:hover\:bg-gray-800\/50:hover {
   background-color: #1a1f35 !important;
 }
 
-/* Active/selected sidebar item */
+/* Active / selected state */
 .dark\:bg-gray-850,
+.dark\:bg-gray-800\/50,
 .dark\:bg-white\/5 {
   background-color: #1a1f35 !important;
 }
 
+/* Hover on white backgrounds (modals, popovers) */
+.hover\:bg-white:hover,
+.dark\:hover\:bg-white:hover {
+  background-color: #1a1f35 !important;
+}
+
 /* =====================================================================
-   TEXT — High contrast on all surfaces
+   SUBMENU / DROPDOWN HOVER — Fix 1i: no hover effects in submenus
    ===================================================================== */
 
-/* Primary text — full white on dark surfaces */
+/* All dropdown/menu items need visible hover */
+[role="menuitem"]:hover,
+[role="option"]:hover,
+.dropdown-item:hover,
+li:hover > a,
+li:hover > button {
+  background-color: #1a1f35 !important;
+}
+
+/* OWUI uses these patterns for dropdown items */
+.hover\:bg-gray-50\/50:hover,
+.dark\:hover\:bg-gray-800\/30:hover,
+.dark\:hover\:bg-gray-900\/50:hover {
+  background-color: #1a1f35 !important;
+}
+
+/* =====================================================================
+   TEXT — High contrast
+   ===================================================================== */
+
 .text-black, .text-gray-900, .text-gray-800,
 .dark\:text-white, .dark\:text-gray-100, .dark\:text-gray-200,
 .text-gray-700 {
   color: #f0f3f8 !important;
 }
 
-/* Secondary text — visible muted */
 .text-gray-600, .text-gray-500,
 .dark\:text-gray-300 {
   color: #c8cfe0 !important;
 }
 
-/* Muted text — still readable (not faded grey!) */
 .text-gray-400, .text-gray-500,
 .dark\:text-gray-400, .dark\:text-gray-500 {
   color: #a0a8bc !important;
 }
 
-/* Subtly muted */
 .dark\:text-gray-600, .dark\:text-gray-700 {
   color: #8b94a8 !important;
 }
@@ -164,19 +180,16 @@ aside,
 }
 
 /* =====================================================================
-   BUTTONS — ALL interactive buttons use cyan accent consistently
-   Target every OWUI button pattern
+   BUTTONS — Layered approach:
+   - Submit/Send/primary action → cyan filled
+   - Text-only buttons (Folders, Chats, model selector) → NO fill, text cyan
+   - Toggle/toggle switches → cyan
    ===================================================================== */
 
-/* Primary / filled buttons */
+/* 1. Primary filled buttons — submit, send */
 button[type="submit"],
-.btn-primary,
-.bg-blue-500, .bg-blue-600,
-.dark\:bg-blue-600,
-.peer-checked\:bg-blue-600,
-button.bg-black,
-button.dark\:bg-gray-850,
-button.w-full:not([class*="bg-transparent"]):not([class*="bg-gray"]):not([class*="bg-white"]):not([class*="hover:bg-none"]) {
+button[aria-label*="Send"],
+button#send-message-button {
   background-color: #4dd9ff !important;
   color: #0a0e1a !important;
   font-weight: 600 !important;
@@ -184,29 +197,71 @@ button.w-full:not([class*="bg-transparent"]):not([class*="bg-gray"]):not([class*
 }
 
 button[type="submit"]:hover,
+button#send-message-button:hover,
+button[aria-label*="Send"]:hover {
+  background-color: #5ad1ff !important;
+}
+
+/* 2. Blue accent buttons in general */
+.bg-blue-500, .bg-blue-600,
+.dark\:bg-blue-600 {
+  background-color: #4dd9ff !important;
+  color: #0a0e1a !important;
+}
+
 .hover\:bg-blue-600:hover,
 .hover\:bg-blue-700:hover {
   background-color: #5ad1ff !important;
   color: #0a0e1a !important;
 }
 
-/* Icon buttons (send, etc.) */
-button[aria-label*="Send"],
-button[aria-label*="submit"],
-button[class*="rounded-full"][class*="bg-black"],
-button[class*="rounded-full"]:not([class*="bg-transparent"]) {
-  background-color: #4dd9ff !important;
-  color: #0a0e1a !important;
+/* 3. Fix 1f: Folders/Chats/New Chat buttons — remove background fill,
+   keep them as text-only with cyan color.
+   These are the "dark bg" buttons in the sidebar header area */
+
+/* The new chat button and sidebar action buttons */
+.bg-black, .dark\:bg-black {
+  background-color: transparent !important;
+  color: #4dd9ff !important;
 }
 
-/* Accent text */
+button.bg-black, button.dark\:bg-black,
+button[class*="bg-black"] {
+  background-color: transparent !important;
+  color: #4dd9ff !important;
+  border: 1px solid #222438 !important;
+}
+
+button.bg-black:hover, button[class*="bg-black"]:hover {
+  background-color: #1a1f35 !important;
+  color: #4dd9ff !important;
+}
+
+/* 4. Fix 1g: Model selector dropdown — text-only, not filled.
+   OWUI model selector uses dark bg buttons in the chat header */
+#model-selector-button,
+[id*="model-selector"],
+button[class*="model-selector"],
+.model-selector button {
+  background-color: transparent !important;
+  color: #f0f3f8 !important;
+  border: none !important;
+}
+
+/* Override any cyan fill that might be landing on the model dropdown trigger */
+.dark\:hover\:bg-black\/90:hover {
+  background-color: #1a1f35 !important;
+  color: #f0f3f8 !important;
+}
+
+/* 5. Accent text */
 .text-blue-400, .text-blue-500, .text-blue-600, .text-blue-700,
 .dark\:text-blue-300, .dark\:text-blue-400,
 .hover\:text-blue-300:hover, .hover\:text-blue-900:hover {
   color: #4dd9ff !important;
 }
 
-/* Accent borders + focus rings */
+/* 6. Accent borders + focus rings */
 .border-blue-500, .border-blue-600, .dark\:border-blue-600 {
   border-color: #4dd9ff !important;
 }
@@ -218,7 +273,7 @@ button[class*="rounded-full"]:not([class*="bg-transparent"]) {
   border-color: #4dd9ff !important;
 }
 
-/* Toggle switches */
+/* 7. Toggle switches */
 .peer-checked\:bg-blue-600:has(:checked),
 .peer:checked ~ .peer-checked\:bg-blue-600 {
   background-color: #4dd9ff !important;
@@ -228,7 +283,7 @@ button[class*="rounded-full"]:not([class*="bg-transparent"]) {
    INPUTS & FORMS
    ===================================================================== */
 
-input:not([type="range"]),
+input:not([type="range"]):not([type="checkbox"]):not([type="radio"]),
 textarea,
 select {
   background-color: #141829 !important;
@@ -236,7 +291,7 @@ select {
   border-color: #222438 !important;
 }
 
-input:focus:not([type="range"]),
+input:focus:not([type="range"]):not([type="checkbox"]):not([type="radio"]),
 textarea:focus,
 select:focus {
   border-color: #4dd9ff !important;
@@ -246,23 +301,6 @@ select:focus {
 
 input::placeholder, textarea::placeholder {
   color: #8b94a8 !important;
-}
-
-/* =====================================================================
-   SUGGESTED PROMPTS — Hide the homepage suggestion grid
-   ===================================================================== */
-
-/* Hide "Get started with" suggested prompt cards/buttons on homepage */
-.suggestion,
-[class*="suggestion"],
-[class*="Suggestion"],
-/* The grid of example prompts shown on empty chat */
-.grid.gap-2 button[class*="text-left"],
-.grid.grid-cols-2 button,
-/* Prompt examples container */
-[class*="prompt-suggestion"],
-[class*="promptSuggestion"] {
-  display: none !important;
 }
 
 /* =====================================================================
@@ -304,28 +342,28 @@ pre, .hljs, code {
 .to-white { --tw-gradient-to: #141829 !important; }
 
 /* =====================================================================
-   LOGO — Hide OWUI's inline SVG logo in sidebar & chat area
-   The actual image files are replaced via Dockerfile COPY
+   SUGGESTED PROMPTS — Hidden
    ===================================================================== */
 
-/* Hide any inline OWUI wordmark/logo SVG */
-img[src*="logo"],
-img[alt*="Open WebUI"],
-img[alt*="open-webui"] {
-  content: url('/static/logo.png') !important;
+.suggestion,
+[class*="suggestion"],
+[class*="Suggestion"],
+[class*="prompt-suggestion"],
+[class*="promptSuggestion"] {
+  display: none !important;
 }
 
 /* =====================================================================
    MISC UI POLISH
    ===================================================================== */
 
-/* Login page buttons */
-form button, form button[type="submit"] {
+/* Login page */
+form button[type="submit"] {
   background-color: #4dd9ff !important;
   color: #0a0e1a !important;
   font-weight: 600 !important;
 }
-form button:hover { background-color: #5ad1ff !important; }
+form button[type="submit"]:hover { background-color: #5ad1ff !important; }
 
 /* Tooltips */
 .tippy-box[data-theme~=dark] {
