@@ -1,7 +1,13 @@
 /*
- * Brace × PromptRoot Theme for Open WebUI v4.0
+ * Brace × PromptRoot Theme for Open WebUI v5.0
  * Full PromptRoot design system — navy bg, cyan accent, Inter font
  * Force-dark, direct selectors (Tailwind v4 compatible)
+ *
+ * v5.0 changes:
+ * - Hide suggested prompts on homepage
+ * - Fix sidebar contrast (solid dark surface, white text)
+ * - Consistent cyan accent on ALL interactive buttons
+ * - PromptRoot logo replaces OWUI logo via Dockerfile
  */
 
 /* =====================================================================
@@ -14,7 +20,7 @@
   font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
 }
 
-code, pre, kbd, samp, .font-mono {
+code, pre, kbd, samp, .font-mono, [class*="font-mono"] {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
 }
 
@@ -33,18 +39,25 @@ body {
 }
 
 /* =====================================================================
-   BACKGROUNDS — Map all OWUI grays to PromptRoot palette
+   SIDEBAR — Solid dark surface, strong contrast text
    ===================================================================== */
 
-/* Primary bg — deepest layer */
+/* Sidebar container — solid #141829, NOT faded/transparent */
+nav,
+aside,
+[class*="sidebar"],
+.sidebar {
+  background-color: #141829 !important;
+}
+
+/* All gray sidebar backgrounds → solid surface */
 .bg-gray-950, .dark\:bg-gray-950,
 .hover\:bg-gray-950:hover, .dark\:hover\:bg-gray-950:hover,
 .bg-gray-900, .dark\:bg-gray-900,
 .hover\:bg-gray-900:hover, .dark\:hover\:bg-gray-900:hover {
-  background-color: #0a0e1a !important;
+  background-color: #0d1121 !important;
 }
 
-/* Surface — sidebar, panels, cards */
 .bg-gray-850, .dark\:bg-gray-850,
 .hover\:bg-gray-850:hover, .dark\:hover\:bg-gray-850:hover,
 .bg-gray-800, .dark\:bg-gray-800,
@@ -52,60 +65,82 @@ body {
   background-color: #141829 !important;
 }
 
-/* Surface elevated — hover, secondary panels */
 .bg-gray-700, .dark\:bg-gray-700,
 .hover\:bg-gray-700:hover, .dark\:hover\:bg-gray-700:hover {
   background-color: #1a1f35 !important;
 }
 
-/* Borders / dividers */
 .bg-gray-600, .dark\:bg-gray-600,
 .hover\:bg-gray-600:hover, .dark\:hover\:bg-gray-600:hover {
   background-color: #222438 !important;
 }
 
-/* Light grays — inputs, chips in light mode */
-.bg-gray-100, .bg-gray-50 {
+/* Light mode grays → surface */
+.bg-gray-100, .bg-gray-50, .dark\:bg-gray-850 {
   background-color: #141829 !important;
 }
 .hover\:bg-gray-100:hover, .hover\:bg-gray-50:hover {
   background-color: #1a1f35 !important;
 }
 
-/* White backgrounds (modals, popovers, inputs) */
+/* White → main bg */
 .bg-white, .dark\:bg-white {
-  background-color: #141829 !important;
+  background-color: #0a0e1a !important;
 }
 
 /* Opacity variants */
-.dark\:bg-gray-900\/50 { background-color: rgba(10,14,26,0.5) !important; }
-.dark\:bg-gray-900\/80 { background-color: rgba(10,14,26,0.8) !important; }
-.dark\:bg-gray-900\/95 { background-color: rgba(10,14,26,0.95) !important; }
+.dark\:bg-gray-900\/50 { background-color: rgba(13,17,33,0.5) !important; }
+.dark\:bg-gray-900\/80 { background-color: rgba(13,17,33,0.8) !important; }
+.dark\:bg-gray-900\/95 { background-color: rgba(13,17,33,0.95) !important; }
 .dark\:bg-gray-850\/80 { background-color: rgba(20,24,41,0.8) !important; }
 .dark\:bg-gray-850\/90 { background-color: rgba(20,24,41,0.9) !important; }
+.dark\:bg-gray-700\/20 { background-color: rgba(26,31,53,0.4) !important; }
+.dark\:bg-gray-800\/50 { background-color: rgba(20,24,41,0.5) !important; }
 
 /* =====================================================================
-   TEXT
+   SIDEBAR HOVER STATES — clearly visible
    ===================================================================== */
 
+/* Sidebar nav items hover */
+.dark\:hover\:bg-gray-850:hover,
+.dark\:hover\:bg-gray-900:hover,
+.dark\:hover\:bg-gray-950:hover,
+.dark\:hover\:bg-white\/5:hover {
+  background-color: #1a1f35 !important;
+}
+
+/* Active/selected sidebar item */
+.dark\:bg-gray-850,
+.dark\:bg-white\/5 {
+  background-color: #1a1f35 !important;
+}
+
+/* =====================================================================
+   TEXT — High contrast on all surfaces
+   ===================================================================== */
+
+/* Primary text — full white on dark surfaces */
 .text-black, .text-gray-900, .text-gray-800,
-.dark\:text-white, .dark\:text-gray-100, .dark\:text-gray-200 {
+.dark\:text-white, .dark\:text-gray-100, .dark\:text-gray-200,
+.text-gray-700 {
   color: #f0f3f8 !important;
 }
 
-.text-gray-700, .text-gray-600,
+/* Secondary text — visible muted */
+.text-gray-600, .text-gray-500,
 .dark\:text-gray-300 {
   color: #c8cfe0 !important;
 }
 
-.text-gray-500, .text-gray-400,
+/* Muted text — still readable (not faded grey!) */
+.text-gray-400, .text-gray-500,
 .dark\:text-gray-400, .dark\:text-gray-500 {
-  color: #8b94a8 !important;
+  color: #a0a8bc !important;
 }
 
-/* White text on dark surfaces */
+/* Subtly muted */
 .dark\:text-gray-600, .dark\:text-gray-700 {
-  color: #6b7499 !important;
+  color: #8b94a8 !important;
 }
 
 /* =====================================================================
@@ -129,18 +164,39 @@ body {
 }
 
 /* =====================================================================
-   ACCENT — PromptRoot cyan #4dd9ff replacing OWUI blue
+   BUTTONS — ALL interactive buttons use cyan accent consistently
+   Target every OWUI button pattern
    ===================================================================== */
 
-/* Primary buttons */
+/* Primary / filled buttons */
+button[type="submit"],
+.btn-primary,
 .bg-blue-500, .bg-blue-600,
 .dark\:bg-blue-600,
-.peer-checked\:bg-blue-600 {
+.peer-checked\:bg-blue-600,
+button.bg-black,
+button.dark\:bg-gray-850,
+button.w-full:not([class*="bg-transparent"]):not([class*="bg-gray"]):not([class*="bg-white"]):not([class*="hover:bg-none"]) {
   background-color: #4dd9ff !important;
   color: #0a0e1a !important;
+  font-weight: 600 !important;
+  border: none !important;
 }
-.hover\:bg-blue-600:hover, .dark\:hover\:bg-black\/90:hover {
+
+button[type="submit"]:hover,
+.hover\:bg-blue-600:hover,
+.hover\:bg-blue-700:hover {
   background-color: #5ad1ff !important;
+  color: #0a0e1a !important;
+}
+
+/* Icon buttons (send, etc.) */
+button[aria-label*="Send"],
+button[aria-label*="submit"],
+button[class*="rounded-full"][class*="bg-black"],
+button[class*="rounded-full"]:not([class*="bg-transparent"]) {
+  background-color: #4dd9ff !important;
+  color: #0a0e1a !important;
 }
 
 /* Accent text */
@@ -150,13 +206,11 @@ body {
   color: #4dd9ff !important;
 }
 
-/* Accent borders */
-.border-blue-500, .border-blue-600,
-.dark\:border-blue-600 {
+/* Accent borders + focus rings */
+.border-blue-500, .border-blue-600, .dark\:border-blue-600 {
   border-color: #4dd9ff !important;
 }
 
-/* Focus rings */
 .focus\:ring-blue-500:focus,
 .dark\:ring-blue-500,
 .dark\:focus\:border-blue-500:focus {
@@ -164,8 +218,9 @@ body {
   border-color: #4dd9ff !important;
 }
 
-/* Toggle switch */
-.peer-checked\:bg-blue-600:has(:checked) {
+/* Toggle switches */
+.peer-checked\:bg-blue-600:has(:checked),
+.peer:checked ~ .peer-checked\:bg-blue-600 {
   background-color: #4dd9ff !important;
 }
 
@@ -181,7 +236,9 @@ select {
   border-color: #222438 !important;
 }
 
-input:focus, textarea:focus, select:focus {
+input:focus:not([type="range"]),
+textarea:focus,
+select:focus {
   border-color: #4dd9ff !important;
   outline-color: #4dd9ff !important;
   box-shadow: 0 0 0 2px rgba(77,217,255,0.15) !important;
@@ -189,6 +246,23 @@ input:focus, textarea:focus, select:focus {
 
 input::placeholder, textarea::placeholder {
   color: #8b94a8 !important;
+}
+
+/* =====================================================================
+   SUGGESTED PROMPTS — Hide the homepage suggestion grid
+   ===================================================================== */
+
+/* Hide "Get started with" suggested prompt cards/buttons on homepage */
+.suggestion,
+[class*="suggestion"],
+[class*="Suggestion"],
+/* The grid of example prompts shown on empty chat */
+.grid.gap-2 button[class*="text-left"],
+.grid.grid-cols-2 button,
+/* Prompt examples container */
+[class*="prompt-suggestion"],
+[class*="promptSuggestion"] {
+  display: none !important;
 }
 
 /* =====================================================================
@@ -225,73 +299,33 @@ pre, .hljs, code {
 .dark\:to-gray-900, .dark\:to-gray-900\/90 {
   --tw-gradient-to: #0a0e1a !important;
 }
-.dark\:via-gray-900 {
-  --tw-gradient-via: #0a0e1a !important;
-}
-.from-gray-50, .from-gray-100 {
-  --tw-gradient-from: #141829 !important;
-}
-.to-white {
-  --tw-gradient-to: #141829 !important;
-}
+.dark\:via-gray-900 { --tw-gradient-via: #0a0e1a !important; }
+.from-gray-50, .from-gray-100 { --tw-gradient-from: #141829 !important; }
+.to-white { --tw-gradient-to: #141829 !important; }
 
 /* =====================================================================
-   CHAT MESSAGES
+   LOGO — Hide OWUI's inline SVG logo in sidebar & chat area
+   The actual image files are replaced via Dockerfile COPY
    ===================================================================== */
 
-/* User message bubble */
-.dark\:bg-gray-700\/20 { background-color: rgba(26,31,53,0.4) !important; }
-.dark\:bg-gray-800\/50 { background-color: rgba(20,24,41,0.5) !important; }
-
-/* =====================================================================
-   LOGO — Replace OWUI logo with PromptRoot
-   Hide the default "Open WebUI" or "Brace" text logo, inject SVG
-   ===================================================================== */
-
-/* Hide OWUI's default splash/logo image */
-#logo {
-  display: none !important;
-}
-
-/* =====================================================================
-   LOGIN PAGE — Fix branding + button visibility
-   ===================================================================== */
-
-/* Hide "(Open WebUI)" from the signin title — replace via content trick */
-/* The title reads "Sign in to Brace (Open WebUI)" — hide the parens part */
-h1, h2 {
-  font-family: 'Inter', sans-serif !important;
-  font-weight: 600 !important;
-  color: #f0f3f8 !important;
-}
-
-/* Sign in button — ensure it's visible with cyan */
-button[type="submit"],
-button.btn-primary,
-.btn-primary,
-form button {
-  background-color: #4dd9ff !important;
-  color: #0a0e1a !important;
-  font-weight: 600 !important;
-  border: none !important;
-}
-
-form button:hover {
-  background-color: #5ad1ff !important;
-}
-
-/* All buttons that OWUI renders as dark/filled */
-button.w-full,
-button[class*="bg-black"],
-button[class*="dark:bg-gray"] {
-  background-color: #4dd9ff !important;
-  color: #0a0e1a !important;
-  border: none !important;
+/* Hide any inline OWUI wordmark/logo SVG */
+img[src*="logo"],
+img[alt*="Open WebUI"],
+img[alt*="open-webui"] {
+  content: url('/static/logo.png') !important;
 }
 
 /* =====================================================================
    MISC UI POLISH
    ===================================================================== */
+
+/* Login page buttons */
+form button, form button[type="submit"] {
+  background-color: #4dd9ff !important;
+  color: #0a0e1a !important;
+  font-weight: 600 !important;
+}
+form button:hover { background-color: #5ad1ff !important; }
 
 /* Tooltips */
 .tippy-box[data-theme~=dark] {
@@ -307,5 +341,12 @@ button[class*="dark:bg-gray"] {
 /* Selection highlight */
 ::selection {
   background-color: rgba(77,217,255,0.2) !important;
+  color: #f0f3f8 !important;
+}
+
+/* Headings */
+h1, h2, h3, h4 {
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 600 !important;
   color: #f0f3f8 !important;
 }
