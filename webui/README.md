@@ -1,44 +1,71 @@
 # Brace Open WebUI Theme
 
-Dark theme for Brace's Open WebUI instance, styled to match [PromptRoot](https://promptroot.github.io/promptroot/) — navy backgrounds, cyan accent, Inter font.
+Dark navy theme for Brace's Open WebUI instance, styled to match [PromptRoot](https://promptroot.github.io/promptroot/) — navy backgrounds, cyan accent.
 
-## Applying the Theme
+## How It Works
 
-### Option A — Admin Panel (quick/manual)
+Open WebUI v0.8+ uses **Tailwind v4**, which bakes `oklch()` color literals directly into compiled CSS at build time. CSS variable overrides (e.g. `--color-gray-950`) have **no effect** — Tailwind v4 doesn't reference them at runtime.
 
-1. Open your Brace UI (e.g. https://brace-ui.fly.dev)
-2. Go to **Admin Panel → Interface → Custom CSS**
-3. Paste the contents of `theme.css`
-4. Save
+`theme.css` v3.0 uses **direct class and element selectors** instead, and forces dark navy regardless of system light/dark preference.
 
-This persists in Open WebUI's SQLite DB. Survives restarts but requires re-applying after a full DB wipe.
+## Delivery Mechanism
 
-### Option B — Environment Variable (recommended for fly.io)
+Two channels are used simultaneously:
 
-Set `WEBUI_CUSTOM_CSS_FILE` to point at a mounted copy of `theme.css`.
+### 1. `/app/build/static/custom.css` (Dockerfile)
 
-In `fly.toml`:
-```toml
-[env]
-  WEBUI_CUSTOM_CSS_FILE = "/data/theme.css"
-```
-
-Then copy `theme.css` into your fly.io volume at `/data/theme.css`.
-
-Or bake it into a custom Docker image:
 ```dockerfile
-FROM ghcr.io/open-webui/open-webui:main
-COPY webui/theme.css /app/backend/static/custom.css
+COPY custom.css /app/build/static/custom.css
 ```
 
-The Open WebUI HTML already links `/static/custom.css` — so copying directly there is the cleanest zero-config approach.
+OWUI's `config.py` runs on every boot and:
+1. Deletes `/app/backend/open_webui/static/` entirely
+2. Copies everything from `/app/build/static/` into it
+
+So baking into `/app/build/static/` is the only Dockerfile approach that survives startup.
+
+The HTML links this file early:
+```html
+<link rel="stylesheet" href="/static/custom.css">
+```
+
+### 2. DB `ui.custom_css` (SQLite)
+
+OWUI stores custom CSS in `webui.db` (`config` table, `ui.custom_css` key). The Svelte frontend injects it as a `<style>` tag **after** all stylesheets load — giving it full cascade priority over Tailwind.
+
+After deploy, inject via SSH:
+```bash
+flyctl ssh console -a brace-ui -C "python3 -c \"
+import json, sqlite3
+db = sqlite3.connect('/app/backend/data/webui.db')
+css = open('/app/build/static/custom.css').read()
+row = db.execute('SELECT id, data FROM config ORDER BY id DESC LIMIT 1').fetchone()
+data = json.loads(row[1])
+data.setdefault('ui', {})['custom_css'] = css
+db.execute('UPDATE config SET data=? WHERE id=?', [json.dumps(data), row[0]])
+db.commit()
+print('Done:', len(css), 'bytes')
+db.close()
+\""
+```
+
+Or manually via **Admin Panel → Interface → Custom CSS**.
+
+## What Does NOT Work
+
+| Approach | Why |
+|----------|-----|
+| `COPY` to `/app/backend/open_webui/static/custom.css` | Wiped on every boot by config.py |
+| Runtime injection (sleep + cp) | Same — wiped |
+| CSS variable overrides (`--color-gray-*`) | Tailwind v4 bakes oklch() literals; vars unused at runtime |
+| `WEBUI_CUSTOM_CSS_FILE` env var | Does not exist in current OWUI source |
 
 ## Design Tokens
 
 | Token | Value | Purpose |
 |-------|-------|---------|
 | Background | `#0a0e1a` | Page background |
-| Surface | `#141829` | Cards, inputs |
+| Surface | `#141829` | Sidebar, cards, inputs |
 | Surface elevated | `#1a1f35` | Hover states |
 | Border | `#222438` | Dividers |
 | Text | `#f0f3f8` | Primary text |
@@ -47,7 +74,15 @@ The Open WebUI HTML already links `/static/custom.css` — so copying directly t
 
 Source: `promptroot/promptroot` → `src/styles/base.css`
 
-## Open WebUI Version
+## Tested Against
 
-Tested against Open WebUI 0.6.x (Tailwind v4, oklch color scale).
-If colors look off after an OWU upgrade, the `--color-gray-*` values in `theme.css` may need re-tuning.
+- Open WebUI **0.8.12** (Tailwind v4, oklch color scale)
+- Deployed on Fly.io (`iad` region)
+
+## Upgrading OWUI
+
+OWUI uses `:main` tag — pulling a new image may change class names or layout structure. If theme breaks after an upgrade:
+1. Open DevTools on the live instance
+2. Inspect the broken elements to find new class names
+3. Update selectors in `theme.css`
+4. Redeploy + re-inject into DB
