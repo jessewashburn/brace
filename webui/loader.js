@@ -29,15 +29,52 @@
   };
 
   // Also set them immediately on documentElement in case they're already set
-  const apply = () => {
+  const applyColors = () => {
     for (const [prop, val] of Object.entries(BRACE_GRAYS)) {
       document.documentElement.style.setProperty(prop, val);
     }
   };
 
+  // Remove "(Open WebUI)" from any text nodes in the page
+  const cleanBranding = () => {
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    for (const node of nodes) {
+      if (node.nodeValue && node.nodeValue.includes('(Open WebUI)')) {
+        node.nodeValue = node.nodeValue.replace(/\s*\(Open WebUI\)/g, '');
+      }
+      if (node.nodeValue && node.nodeValue.includes('Open WebUI')) {
+        node.nodeValue = node.nodeValue.replace(/Open WebUI/g, 'Brace');
+      }
+    }
+    // Also fix document title
+    if (document.title.includes('Open WebUI')) {
+      document.title = document.title.replace(/Open WebUI/g, 'Brace');
+    }
+  };
+
+  const applyAll = () => {
+    applyColors();
+    cleanBranding();
+    // Re-run branding cleanup after a short delay for dynamically rendered text
+    setTimeout(cleanBranding, 500);
+    setTimeout(cleanBranding, 1500);
+  };
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', apply);
+    document.addEventListener('DOMContentLoaded', applyAll);
   } else {
-    apply();
+    applyAll();
+  }
+
+  // Watch for DOM changes (Svelte re-renders) and re-clean branding
+  const observer = new MutationObserver(() => cleanBranding());
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      observer.observe(document.body, { childList: true, subtree: true });
+    });
+  } else {
+    observer.observe(document.body, { childList: true, subtree: true });
   }
 })();
