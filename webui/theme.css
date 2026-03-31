@@ -432,3 +432,35 @@ div[class*="h-screen"][class*="bg-gray-50"] {
 [class*="bg-gray-500\/5"] {
   border-color: #222438 !important;
 }
+
+/* =====================================================================
+   SIDEBAR HOVER — Exact class attribute selectors (v5.3)
+   Tailwind v4 bakes hover colors to oklab() — attribute selectors
+   with :hover are the only reliable override.
+   Confirmed classes from live inspection:
+     dark:hover:bg-gray-900       (New Chat, Search, Notes)
+     dark:hover:bg-gray-850       (icon buttons)
+     dark:hover:bg-gray-850/50    (icon buttons w/ opacity)
+     dark:hover:bg-gray-900/50    (chat list items)
+   ===================================================================== */
+
+[class*="dark:hover:bg-gray-900"]:hover,
+[class*="hover:bg-gray-900"]:hover,
+[class*="dark:hover:bg-gray-850"]:hover,
+[class*="hover:bg-gray-850"]:hover,
+[class*="hover:bg-gray-100"]:hover,
+[class*="hover:bg-gray-50"]:hover {
+  background-color: #1a1f35 !important;
+}
+
+/* =====================================================================
+   SUBMENU HOVER — Fix 1i
+   OWUI dropdowns use these patterns from live inspection
+   ===================================================================== */
+
+[class*="hover:bg-gray-100\/50"]:hover,
+[class*="dark:hover:bg-gray-900\/50"]:hover,
+[class*="dark:hover:bg-gray-850\/50"]:hover,
+[class*="dark:hover:bg-gray-800\/30"]:hover {
+  background-color: #1a1f35 !important;
+}
