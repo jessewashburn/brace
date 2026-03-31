@@ -434,33 +434,22 @@ div[class*="h-screen"][class*="bg-gray-50"] {
 }
 
 /* =====================================================================
-   SIDEBAR HOVER — Exact class attribute selectors (v5.3)
-   Tailwind v4 bakes hover colors to oklab() — attribute selectors
-   with :hover are the only reliable override.
-   Confirmed classes from live inspection:
-     dark:hover:bg-gray-900       (New Chat, Search, Notes)
-     dark:hover:bg-gray-850       (icon buttons)
-     dark:hover:bg-gray-850/50    (icon buttons w/ opacity)
-     dark:hover:bg-gray-900/50    (chat list items)
+   ALL HOVER STATES — Complete coverage (v5.4)
+   Full list extracted from compiled JS bundles.
+   Attribute selectors override Tailwind v4 baked oklab() values.
    ===================================================================== */
 
-[class*="dark:hover:bg-gray-900"]:hover,
-[class*="hover:bg-gray-900"]:hover,
-[class*="dark:hover:bg-gray-850"]:hover,
-[class*="hover:bg-gray-850"]:hover,
-[class*="hover:bg-gray-100"]:hover,
-[class*="hover:bg-gray-50"]:hover {
+/* Every hover:bg-gray-* variant used in OWUI */
+[class*="hover:bg-gray-"]:hover,
+[class*="dark:hover:bg-gray-"]:hover {
   background-color: #1a1f35 !important;
 }
 
-/* =====================================================================
-   SUBMENU HOVER — Fix 1i
-   OWUI dropdowns use these patterns from live inspection
-   ===================================================================== */
-
-[class*="hover:bg-gray-100\/50"]:hover,
-[class*="dark:hover:bg-gray-900\/50"]:hover,
-[class*="dark:hover:bg-gray-850\/50"]:hover,
-[class*="dark:hover:bg-gray-800\/30"]:hover {
+/* Tippy.js dropdowns — these are appended to <body> and use
+   the same Tailwind hover classes inside .tippy-box[data-theme=dark] */
+.tippy-box[data-theme~=dark] [class*="hover:bg-gray-"]:hover,
+.tippy-box[data-theme~=dark] [class*="dark:hover:bg-gray-"]:hover,
+[data-tippy-root] [class*="hover:bg-gray-"]:hover,
+[data-tippy-root] [class*="dark:hover:bg-gray-"]:hover {
   background-color: #1a1f35 !important;
 }
