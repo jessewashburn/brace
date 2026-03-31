@@ -7,7 +7,7 @@ app = 'brace-ui'
 primary_region = 'iad'
 
 [build]
-  image = 'ghcr.io/open-webui/open-webui:main'
+  dockerfile = 'Dockerfile'
 
 [deploy]
   strategy = 'immediate'

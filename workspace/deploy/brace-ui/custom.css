@@ -1,0 +1,569 @@
+/*
+ * Brace × PromptRoot Theme — Open WebUI
+ * Aligned with PromptRoot UI Guidelines v2.0
+ *
+ * Architecture:
+ *   1. Design Tokens (CSS Variables) — single source of truth
+ *   2. Base overrides — html/body/dark mode
+ *   3. Layout — backgrounds, sidebar, main containers
+ *   4. Typography — text, headings
+ *   5. Borders
+ *   6. Hover & interactive states (universal)
+ *   7. Buttons & accents
+ *   8. Inputs & forms
+ *   9. Code blocks
+ *  10. Scrollbar
+ *  11. Utilities (selection, suggestions, gradient helpers)
+ *  12. Font import
+ *
+ * No hard-coded hex values outside of :root.
+ * Uses var(--token) everywhere below the :root block.
+ */
+
+/* ===================================================================
+   1. DESIGN TOKENS
+   Source: PromptRoot UI Guidelines base.css
+   =================================================================== */
+
+:root {
+  /* Core palette */
+  --bg:           #0a0e1a;
+  --bg-deep:      #0d1121;
+  --card:         #141829;
+  --card-raised:  #1a1f35;
+  --surface:      #222438;
+  --surface-high: #2a2d4a;
+
+  /* Text */
+  --text:         #f0f3f8;
+  --text-muted:   #c8cfe0;
+  --muted:        #a0a8bc;
+  --muted-deep:   #8b94a8;
+
+  /* Accent */
+  --accent:       #4dd9ff;
+  --accent-hover: #5ad1ff;
+  --accent-glow:  rgba(77, 217, 255, 0.15);
+
+  /* Semantic */
+  --danger:       #c0504d;
+  --warn:         #f39c12;
+  --success:      #27ae60;
+
+  /* Border */
+  --border:       #222438;
+  --border-high:  #2a2d4a;
+
+  /* Font */
+  --font-sans:    'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono:    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+
+/* ===================================================================
+   2. BASE — Force dark mode; apply tokens globally
+   =================================================================== */
+
+html, html.light, html.dark, body {
+  background-color: var(--bg) !important;
+  color: var(--text) !important;
+}
+
+* {
+  font-family: var(--font-sans) !important;
+}
+
+code, pre, kbd, samp,
+.font-mono, [class*="font-mono"] {
+  font-family: var(--font-mono) !important;
+}
+
+
+/* ===================================================================
+   3. LAYOUT — Backgrounds mapped from Tailwind gray scale
+   =================================================================== */
+
+/* Darkest surfaces */
+.bg-gray-950, .dark\:bg-gray-950,
+.bg-gray-900, .dark\:bg-gray-900 {
+  background-color: var(--bg-deep) !important;
+}
+
+/* Mid surfaces */
+.bg-gray-850, .dark\:bg-gray-850,
+.bg-gray-800, .dark\:bg-gray-800 {
+  background-color: var(--card) !important;
+}
+
+/* Popup/dropdown panels (bg-white dark:bg-gray-850 with border+shadow)
+   Need to be darker than var(--card-raised) so hover is visible.
+   Target: panels with border AND shadow AND bg-gray-850 */
+[class*="dark:bg-gray-850"][class*="border"][class*="shadow"],
+[class*="dark:bg-gray-850"][class*="rounded"][class*="z-50"] {
+  background-color: var(--bg-deep) !important;
+}
+
+/* Raised surfaces */
+.bg-gray-700, .dark\:bg-gray-700 {
+  background-color: var(--card-raised) !important;
+}
+
+/* Borders/dividers used as bg */
+.bg-gray-600, .dark\:bg-gray-600 {
+  background-color: var(--surface) !important;
+}
+
+/* Light-mode classes rendered dark */
+.bg-white, .dark\:bg-white,
+.bg-gray-50, .bg-gray-100 {
+  background-color: var(--bg) !important;
+}
+
+/* Opacity variants */
+.dark\:bg-gray-900\/50  { background-color: rgba(13,17,33,0.50) !important; }
+.dark\:bg-gray-900\/80  { background-color: rgba(13,17,33,0.80) !important; }
+.dark\:bg-gray-900\/95  { background-color: rgba(13,17,33,0.95) !important; }
+.dark\:bg-gray-850\/80  { background-color: rgba(20,24,41,0.80) !important; }
+.dark\:bg-gray-850\/90  { background-color: rgba(20,24,41,0.90) !important; }
+.dark\:bg-gray-800\/50  { background-color: rgba(20,24,41,0.50) !important; }
+.dark\:bg-gray-700\/20  { background-color: rgba(26,31,53,0.40) !important; }
+.dark\:bg-white\/5      { background-color: rgba(255,255,255,0.05) !important; }
+
+/* Sidebar panel — Tailwind v4 compiles bg-gray-50/70 dark:bg-gray-950/70
+   to oklab(). Only attribute selectors survive as overrides. */
+[class*="bg-gray-950\/70"],
+[class*="bg-gray-50\/70"],
+div[class*="h-screen"][class*="bg-gray-50"] {
+  background-color: var(--card) !important;
+  backdrop-filter: none !important;
+}
+
+/* Input/prompt bar */
+[class*="bg-white\/5"],
+[class*="bg-gray-500\/5"] {
+  border-color: var(--border) !important;
+}
+
+
+/* ===================================================================
+   4. TYPOGRAPHY
+   =================================================================== */
+
+/* Primary text */
+.text-black, .text-gray-900, .text-gray-800,
+.dark\:text-white, .dark\:text-gray-100, .dark\:text-gray-200,
+.text-gray-700 {
+  color: var(--text) !important;
+}
+
+/* Secondary text */
+.text-gray-600, .text-gray-500,
+.dark\:text-gray-300 {
+  color: var(--text-muted) !important;
+}
+
+/* Muted text */
+.text-gray-400,
+.dark\:text-gray-400, .dark\:text-gray-500 {
+  color: var(--muted) !important;
+}
+
+/* Deep-muted */
+.dark\:text-gray-600, .dark\:text-gray-700 {
+  color: var(--muted-deep) !important;
+}
+
+/* Accent text */
+.text-blue-400, .text-blue-500, .text-blue-600, .text-blue-700,
+.dark\:text-blue-300, .dark\:text-blue-400,
+.hover\:text-blue-300:hover, .hover\:text-blue-900:hover {
+  color: var(--accent) !important;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-sans) !important;
+  font-weight: 600 !important;
+  color: var(--text) !important;
+}
+
+
+/* ===================================================================
+   5. BORDERS
+   =================================================================== */
+
+.border-gray-100, .border-gray-200,
+.dark\:border-gray-700, .dark\:border-gray-800,
+.dark\:border-gray-850, .dark\:border-gray-900 {
+  border-color: var(--border) !important;
+}
+
+.border-gray-300, .dark\:border-gray-600 {
+  border-color: var(--border-high) !important;
+}
+
+.outline-gray-100, .outline-gray-200,
+.dark\:outline-gray-700, .dark\:outline-gray-800,
+.dark\:outline-gray-850 {
+  outline-color: var(--border) !important;
+}
+
+.border-blue-500, .border-blue-600, .dark\:border-blue-600 {
+  border-color: var(--accent) !important;
+}
+
+.focus\:ring-blue-500:focus,
+.dark\:ring-blue-500,
+.dark\:focus\:border-blue-500:focus {
+  --tw-ring-color: var(--accent-glow) !important;
+  border-color: var(--accent) !important;
+}
+
+
+/* ===================================================================
+   6. HOVER & INTERACTIVE STATES
+   Two variants:
+     hover:bg-gray-*        — direct mouse hover
+     group-hover:bg-gray-*  — parent-group mouse hover (chat list rows)
+   Full lists extracted from compiled OWUI JS bundles.
+   Attribute selectors override Tailwind v4's baked oklab() values.
+   =================================================================== */
+
+/* Direct hover — every variant */
+[class*="hover:bg-gray-"]:hover,
+[class*="dark:hover:bg-gray-"]:hover {
+  background-color: var(--card-raised) !important;
+}
+
+/* Group-hover — triggered when parent .group is hovered.
+   Chat history rows use group-hover:bg-gray-100 dark:group-hover:bg-gray-950 */
+.group:hover [class*="group-hover:bg-gray-"],
+.group:hover [class*="dark:group-hover:bg-gray-"] {
+  background-color: var(--card-raised) !important;
+}
+
+/* Tippy.js dropdowns — portaled to <body>, same Tailwind classes inside */
+.tippy-box[data-theme~=dark] [class*="hover:bg-gray-"]:hover,
+.tippy-box[data-theme~=dark] [class*="dark:hover:bg-gray-"]:hover,
+[data-tippy-root] [class*="hover:bg-gray-"]:hover,
+[data-tippy-root] [class*="dark:hover:bg-gray-"]:hover {
+  background-color: var(--card-raised) !important;
+}
+
+/* Active / selected sidebar items */
+.dark\:bg-gray-850,
+.dark\:bg-gray-800\/50,
+.dark\:bg-white\/5 {
+  background-color: var(--card-raised) !important;
+}
+
+/* Hover on white-bg elements (modals, popovers in light mode) */
+.hover\:bg-white:hover,
+.dark\:hover\:bg-white:hover {
+  background-color: var(--card-raised) !important;
+}
+
+/* Settings modal/page tab rail — OWUI mostly changes text color on hover.
+   Give tabs and the search chip a real surface/border transition. */
+#settings-tabs-container [role="tab"],
+#admin-settings-tabs-container button,
+a[id][href*="/settings/"] {
+  border: 1px solid transparent !important;
+  transition:
+    background-color 140ms ease,
+    border-color 140ms ease,
+    color 140ms ease,
+    box-shadow 140ms ease,
+    transform 140ms ease !important;
+}
+
+#settings-tabs-container [role="tab"]:hover,
+#settings-tabs-container [role="tab"]:focus-visible,
+#admin-settings-tabs-container button:hover,
+#admin-settings-tabs-container button:focus-visible,
+a[id][href*="/settings/"]:hover,
+a[id][href*="/settings/"]:focus-visible {
+  background-color: var(--card-raised) !important;
+  border-color: var(--border-high) !important;
+  color: var(--text) !important;
+  box-shadow: 0 0 0 1px var(--accent-glow) !important;
+  transform: translateX(2px);
+}
+
+#settings-tabs-container [role="tab"]:focus-visible,
+#admin-settings-tabs-container button:focus-visible,
+a[id][href*="/settings/"]:focus-visible {
+  outline: none !important;
+}
+
+#settings-search {
+  border: 1px solid transparent !important;
+  transition:
+    background-color 140ms ease,
+    border-color 140ms ease,
+    box-shadow 140ms ease !important;
+}
+
+#settings-search:hover,
+#settings-search:focus-within {
+  background-color: rgba(26, 31, 53, 0.92) !important;
+  border-color: var(--border-high) !important;
+  box-shadow: 0 0 0 1px var(--accent-glow) !important;
+}
+
+/* Header nav rails (admin + playground top tabs, users overview sub-tabs)
+   OWUI defaults mostly change text color only. Add a visible surface hover. */
+[data-brace-header-nav] > a,
+[data-brace-users-nav] > a,
+#users-tabs-container > a {
+  border: 1px solid transparent !important;
+  transition:
+    background-color 140ms ease,
+    border-color 140ms ease,
+    color 140ms ease,
+    box-shadow 140ms ease,
+    transform 140ms ease !important;
+}
+
+[data-brace-header-nav] > a:hover,
+[data-brace-header-nav] > a:focus-visible,
+[data-brace-users-nav] > a:hover,
+[data-brace-users-nav] > a:focus-visible,
+#users-tabs-container > a:hover,
+#users-tabs-container > a:focus-visible {
+  background-color: var(--card-raised) !important;
+  border-color: var(--border-high) !important;
+  color: var(--text) !important;
+  box-shadow: 0 0 0 1px var(--accent-glow) !important;
+  transform: translateY(-1px);
+}
+
+[data-brace-header-nav] > a:focus-visible,
+[data-brace-users-nav] > a:focus-visible,
+#users-tabs-container > a:focus-visible {
+  outline: none !important;
+}
+
+/* Controls side panel (Valves / System Prompt / Advanced Params)
+   Match settings-like hover affordances for collapsible rows and param mode buttons. */
+[data-brace-controls-root] .w-full.cursor-pointer {
+  border-radius: 0.65rem;
+  border: 1px solid transparent !important;
+  transition:
+    background-color 140ms ease,
+    border-color 140ms ease,
+    box-shadow 140ms ease,
+    transform 140ms ease !important;
+}
+
+[data-brace-controls-root] .w-full.cursor-pointer:hover,
+[data-brace-controls-root] .w-full.cursor-pointer:focus-visible {
+  background-color: rgba(26, 31, 53, 0.92) !important;
+  border-color: var(--border-high) !important;
+  box-shadow: 0 0 0 1px var(--accent-glow) !important;
+  transform: translateX(2px);
+}
+
+[data-brace-controls-root] .w-full.cursor-pointer:focus-visible {
+  outline: none !important;
+}
+
+[data-brace-controls-root] button.p-1.px-3.text-xs.flex.rounded-sm.transition,
+[data-brace-controls-root] button.p-1.px-3.text-xs.flex.rounded.transition {
+  border: 1px solid transparent !important;
+  transition:
+    background-color 140ms ease,
+    border-color 140ms ease,
+    color 140ms ease,
+    box-shadow 140ms ease !important;
+}
+
+[data-brace-controls-root] button.p-1.px-3.text-xs.flex.rounded-sm.transition:hover,
+[data-brace-controls-root] button.p-1.px-3.text-xs.flex.rounded-sm.transition:focus-visible,
+[data-brace-controls-root] button.p-1.px-3.text-xs.flex.rounded.transition:hover,
+[data-brace-controls-root] button.p-1.px-3.text-xs.flex.rounded.transition:focus-visible {
+  background-color: var(--card-raised) !important;
+  border-color: var(--border-high) !important;
+  color: var(--text) !important;
+  box-shadow: 0 0 0 1px var(--accent-glow) !important;
+}
+
+[data-brace-controls-root] button.p-1.px-3.text-xs.flex.rounded-sm.transition:focus-visible,
+[data-brace-controls-root] button.p-1.px-3.text-xs.flex.rounded.transition:focus-visible {
+  outline: none !important;
+}
+
+/* Tippy box itself */
+.tippy-box[data-theme~=dark] {
+  background-color: var(--card) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+}
+
+/* "..." fade gradient on chat history rows —
+   from-gray-100 dark:from-gray-950 renders as white/light fade.
+   Override to match sidebar bg so it blends in. */
+[class*="from-gray-100"],
+[class*="dark:from-gray-950"] {
+  --tw-gradient-from: var(--card) !important;
+}
+[class*="from-gray-950"] {
+  --tw-gradient-from: var(--card) !important;
+}
+
+
+/* ===================================================================
+   7. BUTTONS & ACCENT
+   - Primary/submit/send → filled cyan (--accent)
+   - Blue-class buttons → filled cyan
+   - Sidebar action buttons (bg-black) → text-only
+   - Model selector → transparent, neutral text
+   - Toggle switches → cyan
+   =================================================================== */
+
+/* Primary action buttons */
+button[type="submit"],
+button[aria-label*="Send"],
+button#send-message-button,
+form button[type="submit"] {
+  background-color: var(--accent) !important;
+  color: var(--bg) !important;
+  font-weight: 600 !important;
+  border: none !important;
+}
+
+button[type="submit"]:hover,
+button#send-message-button:hover,
+button[aria-label*="Send"]:hover,
+form button[type="submit"]:hover {
+  background-color: var(--accent-hover) !important;
+}
+
+/* General blue → accent */
+.bg-blue-500, .bg-blue-600, .dark\:bg-blue-600 {
+  background-color: var(--accent) !important;
+  color: var(--bg) !important;
+}
+
+.hover\:bg-blue-600:hover, .hover\:bg-blue-700:hover {
+  background-color: var(--accent-hover) !important;
+  color: var(--bg) !important;
+}
+
+/* Sidebar icon/action buttons that OWUI renders as bg-black */
+button.bg-black, button.dark\:bg-black,
+button[class*="bg-black"] {
+  background-color: transparent !important;
+  color: var(--accent) !important;
+  border: 1px solid var(--border) !important;
+}
+
+button.bg-black:hover, button[class*="bg-black"]:hover {
+  background-color: var(--card-raised) !important;
+  color: var(--accent) !important;
+}
+
+/* Model selector trigger — no fill, neutral text */
+#model-selector-button,
+[id*="model-selector"],
+button[class*="model-selector"],
+.model-selector button,
+.dark\:hover\:bg-black\/90:hover {
+  background-color: transparent !important;
+  color: var(--text) !important;
+  border: none !important;
+}
+
+/* Toggle switches */
+.peer-checked\:bg-blue-600:has(:checked),
+.peer:checked ~ .peer-checked\:bg-blue-600 {
+  background-color: var(--accent) !important;
+}
+
+
+/* ===================================================================
+   8. INPUTS & FORMS
+   =================================================================== */
+
+input:not([type="range"]):not([type="checkbox"]):not([type="radio"]),
+textarea,
+select {
+  background-color: var(--card) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+
+input:focus:not([type="range"]):not([type="checkbox"]):not([type="radio"]),
+textarea:focus,
+select:focus {
+  border-color: var(--accent) !important;
+  outline-color: var(--accent) !important;
+  box-shadow: 0 0 0 2px var(--accent-glow) !important;
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--muted-deep) !important;
+}
+
+
+/* ===================================================================
+   9. CODE BLOCKS
+   =================================================================== */
+
+pre, .hljs, code {
+  background-color: var(--bg-deep) !important;
+  color: var(--text-muted) !important;
+  border: 1px solid var(--border) !important;
+}
+
+
+/* ===================================================================
+   10. SCROLLBAR
+   =================================================================== */
+
+::-webkit-scrollbar              { width: 6px; height: 6px; }
+::-webkit-scrollbar-track        { background: transparent; }
+::-webkit-scrollbar-thumb        { background-color: var(--border) !important; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover  { background-color: var(--muted) !important; }
+
+
+/* ===================================================================
+   11. UTILITIES
+   =================================================================== */
+
+/* Suggested prompts — hidden per Jesse's request */
+.mx-auto.max-w-2xl .mx-5,
+.mx-auto.max-w-2xl > div > .mx-5,
+[class*="svelte-6tnq1o"] {
+  display: none !important;
+}
+
+/* Gradient helpers */
+.dark\:from-gray-900, .dark\:from-gray-950 { --tw-gradient-from: var(--bg) !important; }
+.dark\:to-gray-900, .dark\:to-gray-900\/90  { --tw-gradient-to:   var(--bg) !important; }
+.dark\:via-gray-900                          { --tw-gradient-via:  var(--bg) !important; }
+.from-gray-50, .from-gray-100               { --tw-gradient-from: var(--card) !important; }
+.to-white                                   { --tw-gradient-to:   var(--card) !important; }
+
+/* Tag / badge tints */
+.bg-gray-500\/20  { background-color: rgba(34,36,56,0.6)  !important; }
+.bg-gray-700\/50  { background-color: rgba(26,31,53,0.5)  !important; }
+
+/* Text selection */
+::selection {
+  background-color: var(--accent-glow) !important;
+  color: var(--text) !important;
+}
+
+/* Tooltips */
+.tippy-box[data-theme~=dark] {
+  background-color: var(--card-raised) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text) !important;
+}
+
+
+/* ===================================================================
+   12. FONT IMPORT
+   =================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
