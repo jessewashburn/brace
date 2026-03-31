@@ -374,6 +374,25 @@ input::placeholder, textarea::placeholder {
   color: var(--muted-deep) !important;
 }
 
+/* Autofill (browser-injected white bg override) */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px var(--card) inset !important;
+  box-shadow: 0 0 0 1000px var(--card) inset !important;
+  -webkit-text-fill-color: var(--text) !important;
+  caret-color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+
+/* Sign-in page field wrappers — bg-white on the outer container */
+[class*="bg-white"][class*="rounded"] input,
+[class*="dark:bg-gray-900"] input {
+  background-color: var(--card) !important;
+  color: var(--text) !important;
+}
+
 
 /* ===================================================================
    9. CODE BLOCKS
