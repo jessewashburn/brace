@@ -1,5 +1,5 @@
 /*
- * Brace × PromptRoot Theme — Open WebUI v6.5
+ * Brace × PromptRoot Theme — Open WebUI v6.6
  * Aligned with PromptRoot UI Guidelines v2.0
  *
  * Architecture:
@@ -396,13 +396,34 @@ input:-webkit-autofill:active {
 
 /* ===================================================================
    9. CODE BLOCKS
+   highlight.js injects its own light theme stylesheet which sets
+   .hljs { background: #fff; color: #444 } — override everything.
    =================================================================== */
 
-pre, .hljs, code {
+/* Container */
+pre, pre code, .hljs {
   background-color: var(--bg-deep) !important;
   color: var(--text-muted) !important;
   border: 1px solid var(--border) !important;
 }
+
+/* Inline code */
+:not(pre) > code {
+  background-color: var(--card-raised) !important;
+  color: var(--accent) !important;
+  border: 1px solid var(--border) !important;
+  padding: 0.1em 0.35em !important;
+  border-radius: 4px !important;
+}
+
+/* hljs token colors — ensure nothing renders as dark-on-dark */
+.hljs-keyword, .hljs-selector-tag, .hljs-tag { color: #7dd3fc !important; }
+.hljs-string, .hljs-attr                      { color: #86efac !important; }
+.hljs-number, .hljs-literal                   { color: #fda4af !important; }
+.hljs-comment                                 { color: var(--muted) !important; font-style: italic; }
+.hljs-variable, .hljs-template-variable       { color: var(--accent) !important; }
+.hljs-title, .hljs-class .hljs-title          { color: #e2c08d !important; }
+.hljs-type, .hljs-built_in                    { color: #c4b5fd !important; }
 
 
 /* ===================================================================
@@ -478,6 +499,31 @@ pre, .hljs, code {
   color: var(--bg) !important;
 }
 
+
+/* 3d: Thinking / skeleton loading indicator
+   OWUI renders a <Skeleton> component (animate-pulse gray bars) while
+   waiting for the first token. Our dark bg makes gray-on-gray invisible.
+   Force the skeleton bars to use a visible surface color. */
+[class*="animate-pulse"] [class*="bg-gray"],
+[class*="animate-pulse"] [class*="dark:bg-gray"],
+.animate-pulse .bg-gray-200,
+.animate-pulse .bg-gray-300,
+.animate-pulse .dark\:bg-gray-700,
+.animate-pulse .dark\:bg-gray-600 {
+  background-color: var(--surface-high) !important;
+}
+
+/* Skeleton bars inside the chat message area specifically */
+#messages-container [class*="animate-pulse"],
+.svelte-vhdo11 [class*="animate-pulse"] {
+  color: var(--muted) !important;
+}
+
+/* The w-full animate-pulse loading row in chat lists */
+.w-full.animate-pulse,
+div[class*="animate-pulse"][class*="w-full"] {
+  color: var(--muted) !important;
+}
 
 /* 3b: Chat message text contrast — dark grey on black is unreadable.
    Force message content text to full --text brightness. */
