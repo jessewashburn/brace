@@ -10,7 +10,49 @@
   },
   "agents": {
     "defaults": {
-      "model": "anthropic/claude-sonnet-4-6",
+      "model": {
+        "primary": "anthropic/claude-sonnet-4-6",
+        "fallbacks": [
+          "openrouter/minimax/minimax-m2.7",
+          "openrouter/google/gemini-3-flash"
+        ],
+        "routing": {
+          "enabled": true,
+          "router": {
+            "model": "openrouter/minimax/minimax-m2.7",
+            "prompt": "Classify this request. Reply with exactly one word.\nPRIMARY if: complex reasoning, code generation, debugging, refactoring, architecture decisions, multi-step problem solving, nuanced judgment, anything requiring deep thought.\nLOCAL if: simple question, greeting, acknowledgment, basic lookup, summarization, status check, short factual answer.\nRequest: {{request}}",
+            "localResponsePrompt": "Answer this directly and concisely: {{request}}"
+          },
+          "rules": {
+            "alwaysPrimary": {
+              "patterns": ["debug", "refactor", "implement", "architect", "design", "explain", "analyze", "fix", "build", "write code"],
+              "minTokens": 500
+            },
+            "alwaysLocal": {
+              "patterns": ["hello", "hi", "thanks", "thank you", "ok", "okay", "got it", "summarize"],
+              "maxTokens": 50
+            }
+          }
+        }
+      },
+      "models": {
+        "anthropic/claude-sonnet-4-6":      { "alias": "sonnet" },
+        "anthropic/claude-opus-4-6":        { "alias": "opus" },
+        "openrouter/minimax/minimax-m2.7":  { "alias": "mini" },
+        "openrouter/google/gemini-3-flash": { "alias": "flash" }
+      },
+      "heartbeat": {
+        "every": "30m",
+        "model": "openrouter/minimax/minimax-m2.7"
+      },
+      "subagents": {
+        "model": "openrouter/minimax/minimax-m2.7",
+        "maxConcurrent": 1,
+        "archiveAfterMinutes": 60
+      },
+      "imageModel": {
+        "primary": "openrouter/google/gemini-3-flash"
+      },
       "workspace": "/home/jesse/.openclaw/workspace",
       "contextPruning": {
         "mode": "cache-ttl",
@@ -18,9 +60,6 @@
       },
       "compaction": {
         "mode": "safeguard"
-      },
-      "heartbeat": {
-        "every": "30m"
       }
     }
   },

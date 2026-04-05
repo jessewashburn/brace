@@ -24,6 +24,9 @@ node_modules/
 # OpenClaw internals
 update-check.json
 
+# Claude Code local settings (personal overrides, not for sharing)
+.claude/settings.local.json
+
 # Workspace — exclude personal/private files, track templates
 workspace/USER.md
 workspace/IDENTITY.md
